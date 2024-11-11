@@ -24,7 +24,8 @@ int main() {
         arr2[i] = (int)(buf2[len_2-1-i]-'0'); //整数型として配列に格納
 
     int carry = 0;
-    for(i = 0; i < DIGITS; i++) {
+    int max_len = len_1 > len_2 ? len_1 : len_2;
+    for(i = 0; i < max_len || carry > 0; i++) {
         
         int sum = arr1[i] + arr2[i]  + carry;
         arr3[i] = sum % 10;
@@ -33,7 +34,11 @@ int main() {
     arr3[DIGITS] = carry;
 
     //0でない桁を探す
-    int k = DIGITS;
+    int k = max_len;
+    if(carry > 0) {
+        arr3[k] = carry; //繰上げの考慮
+        k++;
+    }
     while(k > 0 && arr3[k] == 0) k--;
 
     for(i = k; i >= 0; --i)
