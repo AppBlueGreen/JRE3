@@ -9,7 +9,7 @@ struct node {
 typedef struct node* list;
 
 void init_list(list l) {
-    list l = (list)malloc(sizeof(struct node));
+    l = (list)malloc(sizeof(struct node));
     l->next = NULL;
 }
 
@@ -31,18 +31,31 @@ int get_length(list l) {
     return i;
 }
 
-void add(list l1, list l2, list l3) {
+// l1とl2の各要素の結果をl3に格納し、l3の末尾を返すメソッド
+list add(list l1, list l2, list l3) {
 
+    list l3_last = l3->next;
     l1 = l1->next;
     l2 = l2->next;
     l3 = l3->next;
-    int carry = 0;
 
-    for(int i = 0; i < get_length(l3); i++) {
+    int len_1 = get_length(l1);
+    int len_2 = get_length(l2);
+    int max_len = len_1 > len_2 ? len_1 : len_2;
+
+    int carry = 0;
+    for(int i = 0; i < max_len || carry > 0; i++) {
+ 
         int sum = l1->element + l2->element + carry;
         l3->element = sum % 10;
         carry = sum / 10;
+
+        l1 = l1->next;
+        l2 = l2->next;
+        l3 = l3->next;
+        l3_last = l3_last->next;
     }
+    return l3_last;
 }
 
 int main() {
@@ -77,13 +90,14 @@ int main() {
     for(int i = 0; i < len_3; i++)
         insert(l3, 0);
 
-    add(l1, l2, l3);
+    list l3_last = add(l1, l2, l3);
+    len_3 = get_length(l3_last); //l3の長さを更新
 
-    // 末尾から辿って０でない桁を探す
-    list last_l3 = l3->next; // l3の末尾記録用
-    list prev_l3 = l3; // last_l3のひとつ前
+    // 結果の出力
     for(int i = 0; i < len_3; i++) {
-        last_l3 = last_l3->next;
-        prev_l3 = prev_l3->next;
+        printf("%d", l3->element);
+        l3 = l3->next;
     }
+    printf("\n");
+    return 0;
 }
