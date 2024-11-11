@@ -8,18 +8,6 @@ struct node {
 };
 typedef struct node* list;
 
-void init_list(list l) {
-    l = (list)malloc(sizeof(struct node));
-    l->next = NULL;
-}
-
-void insert(list l, int e) {
-    list n = (list)malloc(sizeof(struct node));
-    n->element = e;
-    n->next = l->next;
-    l->next = n;
-}
-
 int get_length(list l) {
 
     int i;
@@ -31,10 +19,20 @@ int get_length(list l) {
     return i;
 }
 
+void insert(list l, int e) {
+
+    list n = (list)malloc(sizeof(struct node));
+    n->element = e;
+    n->next = NULL;
+
+    while(l->next != NULL)
+        l = l->next;
+    l->next = n;
+}
+
 // l1とl2の各要素の結果をl3に格納し、l3の末尾を返すメソッド
 list add(list l1, list l2, list l3) {
 
-    list l3_last = l3->next;
     l1 = l1->next;
     l2 = l2->next;
     l3 = l3->next;
@@ -53,19 +51,17 @@ list add(list l1, list l2, list l3) {
         l1 = l1->next;
         l2 = l2->next;
         l3 = l3->next;
-        l3_last = l3_last->next;
     }
-    return l3_last;
+    return l3;
 }
 
 int main() {
     int d;
     char c;
     //リストlの初期化
-    list l1, l2, l3;
-    init_list(l1);
-    init_list(l2);
-    init_list(l3);
+    list l1 = (list)malloc(sizeof(struct node)); l1->next = NULL;
+    list l2 = (list)malloc(sizeof(struct node)); l2->next = NULL;
+    list l3 = (list)malloc(sizeof(struct node)); l3->next = NULL;
 
     //l1, l2に各位の桁を入れ込む
     while((c = getchar()) != '\n') { //読み込んだ数値をcに入れて、改行文字まで以下を繰り返す
