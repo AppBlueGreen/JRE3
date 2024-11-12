@@ -1,5 +1,5 @@
-#include<stdio.h>
-#include "/ced-home/staff/24jr3/include/jr3.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef int elementtype;
 struct node {
@@ -11,83 +11,46 @@ typedef struct node* list;
 int get_length(list l) {
     int i = 0;
     l = l->next;
-
     while(l != NULL) {
         l = l->next;
         i++;
     }
-
     return i;
 }
 
 void insert(list l, int e) {
-
     list n = (list)malloc(sizeof(struct node));
     n->element = e;
     n->next = NULL;
 
-    while(l->next != NULL)
+    while(l->next != NULL) {
         l = l->next;
+    }
     l->next = n;
 }
 
-// l1とl2の各要素の結果をl3に格納
 void add(list l1, list l2, list l3) {
-
     l1 = l1->next;
     l2 = l2->next;
-    l3 = l3->next;
-    int sum;
-
-    int len_1 = get_length(l1);
-    int len_2 = get_length(l2);
-    int max_len = len_1 > len_2 ? len_1 : len_2;
-
 
     int carry = 0;
-    for(int i = 0; i < max_len || carry > 0; i++) {
-
-        if(l1 == NULL) {
-
-            insert(l3,0);
-            sum = l2->element + carry;
-            l3->element = sum % 10;
-            carry = sum / 10;
-
-            l2 = l2->next;
-            l3 = l3->next;
-
-        }
-        else if(l2 == NULL) {
-            insert(l3,0);
-            sum = l1->element + carry;
-            l3->element = sum % 10;
-            carry = sum / 10;
-
+    while (l1 != NULL || l2 != NULL || carry > 0) {
+        int sum = carry;
+        if (l1 != NULL) {
+            sum += l1->element;
             l1 = l1->next;
-            l3 = l3->next;
         }
-        else if(l1 == NULL && l2 == NULL) {
-            insert(l3,0);
-
-            l3->element = carry;
-            l3 = l3->next;
-        }
-        else {
-            insert(l3,0);
-            sum = l1->element + l2->element + carry;
-            l3->element = sum % 10;
-            carry = sum / 10;
-
-            l1 = l1->next;
+        if (l2 != NULL) {
+            sum += l2->element;
             l2 = l2->next;
-            l3 = l3->next;
         }
+        insert(l3, sum % 10);
+        carry = sum / 10;
     }
 }
 
-//引数としているノードの一つ先のノードを削除
 void delete_next(list l) {
+    if (l->next == NULL) return;
     list temp = l->next;
     l->next = l->next->next;
     free(temp);
@@ -107,39 +70,45 @@ void reverse(list l) {
 int main() {
     int d;
     char c;
-    //リストlの初期化
-    list l1 = (list)malloc(sizeof(struct node)); l1->next = NULL;
-    list l2 = (list)malloc(sizeof(struct node)); l2->next = NULL;
-    list l3 = (list)malloc(sizeof(struct node)); l3->next = NULL;
+    list l1 = (list)malloc(sizeof(struct node)); 
+    list l2 = (list)malloc(sizeof(struct node)); 
+    list l3 = (list)malloc(sizeof(struct node)); 
 
-    //l1, l2に各位の桁を入れ込む
-    while((c = getchar()) != '\n') { //読み込んだ数値をcに入れて、改行文字まで以下を繰り返す
+    l1->next = NULL;
+    l2->next = NULL;
+    l3->next = NULL;
 
-        d = (int)c - '0';
-
-        //ここで読み込んだ数字dを処理(リストに挿入するなど)
-        insert(l1,d);
-    }
-    while((c = getchar()) != '\n') { //読み込んだ数値をcに入れて、改行文字まで以下を繰り返す
-
-        d = (int)c - '0';
-
-        //ここで読み込んだ数字dを処理(リストに挿入するなど)
-        insert(l2,d);
+    while((c = getchar()) != '\n' && c != EOF) {
+        if (c >= '0' && c <= '9') {
+            d = (int)c - '0';
+            insert(l1, d);
+        }
     }
 
-    //逆順にするメソッド
+    while((c = getchar()) != '\n' && c != EOF) {
+        if (c >= '0' && c <= '9') {
+            d = (int)c - '0';
+            insert(l2, d);
+        }
+    }
+
     reverse(l1);
     reverse(l2);
 
     add(l1, l2, l3);
 
-    // 結果の出力
+    reverse(l3);
+
     l3 = l3->next;
     while(l3 != NULL) {
         printf("%d", l3->element);
         l3 = l3->next;
     }
     printf("\n");
+
+    free(l1);
+    free(l2);
+    free(l3);
+
     return 0;
 }

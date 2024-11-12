@@ -9,7 +9,7 @@ struct node {
 typedef struct node* list;
 
 int get_length(list l) {
-    int i = 0; // 変数iの初期化が必要
+    int i = 0;
     l = l->next;
     while(l != NULL) {
         l = l->next;
