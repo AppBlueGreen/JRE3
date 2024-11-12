@@ -41,6 +41,26 @@ list add(list l1, list l2, list l3) {
     int len_2 = get_length(l2);
     int max_len = len_1 > len_2 ? len_1 : len_2;
 
+    //足りない部分を0で補填
+    if(len_1 > len_2) {
+        list current = l1;
+        while(current->next != NULL)
+            current = current->next;
+        for(int i = 0; i < len_1 - len_2; i++) {
+            insert(current, 0);
+            current = current->next;
+        }
+    }
+    else if(len_2 > len_1) {
+        list current = l2;
+        while(current->next != NULL)
+            current = current->next;
+        for(int i = 0; i < len_2 - len_1; i++) {
+            insert(current, 0);
+            current = current->next;
+        }
+    }
+
     int carry = 0;
     for(int i = 0; i < max_len || carry > 0; i++) {
  
@@ -53,6 +73,24 @@ list add(list l1, list l2, list l3) {
         l3 = l3->next;
     }
     return l3;
+}
+
+//引数としているノードの一つ先のノードを削除
+void delete(list l) {
+    l->next = l->next->next;
+    free(l->next);
+}
+
+void reverse(list l) {
+
+    list tail = l; //末尾記録用
+    while(tail->next != NULL)
+        tail = tail->next;
+
+    while(l != tail) {
+        tail->next = l->next;
+        delete(l);
+    }
 }
 
 int main() {
@@ -79,14 +117,17 @@ int main() {
         insert(l2,d);
     }
 
+    //逆順にするメソッド
+    void reverse(l1);
+    void reverse(l2);
+
     //l1, l2の長さを取得. それを元に代入先のl3の長さを決定
     int len_1 = get_length(l1);
     int len_2 = get_length(l2);
     int len_3 = len_1 > len_2 ? len_1 : len_2;
-    for(int i = 0; i < len_3; i++)
-        insert(l3, 0);
 
     list l3_last = add(l1, l2, l3);
+    
     len_3 = get_length(l3_last); //l3の長さを更新
 
     // 結果の出力

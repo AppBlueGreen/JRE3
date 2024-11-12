@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "/ced-home/staff/24jr3/include/jr3.h"
 
 typedef int elementtype;
 struct node {
