@@ -81,15 +81,14 @@ void swap(struct point *p1, struct point *p2) {
 
 void insert_by(struct point a[], int n, char c) {
     for(int k = n-2; k >= 0; k--) {
-        if(compare_by(a[n-1], a[k], c) == 1) {
-
+        if(compare_by(a[n-1], a[k], c) >= 0) {
             for(int i = n-1; i >= k+2; i--)
                 swap(&a[i], &a[i-1]);
             return;
         }
     }
 
-    for(int i = n-1; i >= 1; i--)
+    for(int i = n-1; i > 0; i--)
         swap(&a[i], &a[i-1]);
 }
 
