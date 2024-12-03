@@ -52,14 +52,13 @@ int partition(struct point a[], int m ,int n) {
     int r = n;
 
     // (2)
-    while(l <= r){
+    while(1){
         while(l < n && compare(pivot, a[l]) > 0) l++;
         while(m < r && compare(a[r], pivot) > 0) r--;
         if(l < r) {
             swap(&a[l], &a[r]);
             l++; r--;
-        }
-        else {
+        } else {
             break;
         }
     }
